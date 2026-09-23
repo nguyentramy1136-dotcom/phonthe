@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góc Học Chữ Phồn Thể - 繁體字學堂</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;600;700;800&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastel: {
+                            pink: '#FFD1DC',
+                            peach: '#FFE5EC',
+                            mint: '#D8F3DC',
+                            teal: '#B7E4C7',
+                            cream: '#FFF9EC',
+                            yellow: '#FFE194',
+                            blue: '#E0F4FF',
+                            purple: '#E8DFF5',
+                            red: '#FF8FAB',
+                            ink: '#4A3E3D',
+                            cardBg: '#FFFDF9'
+                        }
+                    },
+                    fontFamily: {
+                        chinese: ['"Noto Serif TC"', 'serif'],
+                        cartoon: ['"ZCOOL KuaiLe"', 'cursive'],
+                        sans: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFF9EC;
+            color: #4A3E3D;
+            font-family: 'Nunito', sans-serif;
+            background-image: radial-gradient(#FFD1DC 1px, transparent 1px), radial-gradient(#B7E4C7 1px, #FFF9EC 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+
+        /* 3D Flip Card Effect */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Cute Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFE5EC;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF8FAB;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FB6F92;
+        }
+
+        /* Cloud Floating Animation */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        .animate-bounce-gentle {
+            animation: bounceGentle 2s ease-in-out infinite;
+        }
+        @keyframes bounceGentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* Paper shadow style */
+        .cute-shadow {
+            box-shadow: 0 8px 0 0 #E8C8C8;
+        }
+        .cute-shadow-btn {
+            box-shadow: 0 5px 0 0 #E5B2B8;
+        }
+        .cute-shadow-btn:active {
+            box-shadow: 0 0 0 0 #E5B2B8;
+            transform: translateY(5px);
+        }
+        .cute-shadow-green {
+            box-shadow: 0 5px 0 0 #95D5B2;
+        }
+        .cute-shadow-green:active {
+            box-shadow: 0 0 0 0 #95D5B2;
+            transform: translateY(5px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-pastel-pink selection:text-pastel-ink">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-50 bg-pastel-cream/90 backdrop-blur-md border-b-4 border-pastel-pink px-4 py-3 shadow-sm">
+        <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-2">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-pastel-pink rounded-2xl border-2 border-pastel-ink flex items-center justify-center text-2xl shadow-sm animate-bounce-gentle">
+                    🌸
+                </div>
+                <div>
+                    <h1 class="font-cartoon text-2xl md:text-3xl text-pastel-ink tracking-wide">繁體字學堂</h1>
+                    <p class="text-xs text-gray-500 font-bold tracking-wider">HỌC CHỮ PHỒN THỂ (TRANG 1-5)</p>
+                </div>
+            </div>
+
+            <!-- Header Controls & Audio -->
+            <div class="flex items-center space-x-2 md:space-x-3">
+                <!-- BGM Button -->
+                <button id="bgmToggleBtn" onclick="toggleBGM()" class="bg-pastel-purple hover:bg-opacity-80 text-pastel-ink font-bold px-3 py-2 rounded-xl border-2 border-pastel-ink cute-shadow-btn transition flex items-center space-x-1 text-sm">
+                    <i id="bgmIcon" class="fas me-1 fa-music text-purple-600"></i>
+                    <span id="bgmStatus" class="hidden sm:inline">Nhạc Cổ Phong</span>
+                </button>
+
+                <!-- Audio FX Toggle -->
+                <button id="sfxToggleBtn" onclick="toggleSFX()" class="bg-pastel-yellow hover:bg-opacity-80 text-pastel-ink font-bold p-2 md:px-3 md:py-2 rounded-xl border-2 border-pastel-ink cute-shadow-btn transition text-sm">
+                    <i id="sfxIcon" class="fas fa-volume-up text-amber-600"></i>
+                </button>
+
+                <!-- Search Input Button -->
+                <button onclick="toggleSearchModal()" class="bg-pastel-blue hover:bg-opacity-80 text-pastel-ink font-bold p-2 md:px-3 md:py-2 rounded-xl border-2 border-pastel-ink cute-shadow-btn transition text-sm">
+                    <i class="fas fa-search text-sky-600"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto w-full px-4 py-6 flex-grow flex flex-col justify-center items-center">
+
+        <!-- Navigation Tabs -->
+        <div class="flex space-x-3 md:space-x-6 mb-6">
+            <button id="tabFlashcard" onclick="switchTab('flashcard')" class="bg-pastel-pink text-pastel-ink font-extrabold px-6 py-3 rounded-2xl border-2 border-pastel-ink cute-shadow-btn text-base md:text-lg transition flex items-center space-x-2">
+                <span>🎴 Flashcard Hán Tự</span>
+            </button>
+            <button id="tabPractice" onclick="switchTab('practice')" class="bg-pastel-cream text-gray-500 font-extrabold px-6 py-3 rounded-2xl border-2 border-pastel-ink cute-shadow-btn text-base md:text-lg transition flex items-center space-x-2">
+                <span>✍️ Ôn Tập Tự Luận</span>
+            </button>
+        </div>
+
+        <!-- Filter & Progress Toolbar -->
+        <div class="w-full bg-white/80 backdrop-blur border-2 border-pastel-ink rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <!-- Category Filter -->
+            <div class="flex items-center space-x-2">
+                <span class="text-sm font-bold text-gray-600">Nguồn từ:</span>
+                <select id="tableFilter" onchange="onFilterChange()" class="bg-pastel-peach text-pastel-ink border-2 border-pastel-ink font-bold text-sm rounded-xl px-3 py-1.5 focus:outline-none cursor-pointer">
+                    <option value="all">Tất cả bảng (Gần 500 chữ)</option>
+                    <option value="table1">Bảng 1 (~350 Chữ không làm bộ)</option>
+                    <option value="table2">Bảng 2 (132 Chữ & Bộ thủ)</option>
+                </select>
+            </div>
+
+            <!-- Counter -->
+            <div class="bg-pastel-yellow px-4 py-1.5 rounded-xl border-2 border-pastel-ink text-sm font-extrabold text-pastel-ink">
+                Tiến độ: <span id="currentIndexDisplay">1</span> / <span id="totalWordsDisplay">0</span> Chữ
+            </div>
+        </div>
+
+        <!-- VIEW 1: FLASHCARD MODE -->
+        <section id="flashcardSection" class="w-full flex flex-col items-center">
+            
+            <!-- Flip Card Wrapper -->
+            <div class="w-full max-w-sm md:max-w-md h-80 md:h-96 perspective-1000 cursor-pointer mb-6" onclick="flipCard()">
+                <div id="cardInner" class="relative w-full h-full transform-style-3d rounded-3xl border-4 border-pastel-ink bg-pastel-cardBg cute-shadow p-6 flex flex-col justify-between items-center text-center select-none">
+                    
+                    <!-- FRONT FACE -->
+                    <div class="absolute inset-0 backface-hidden w-full h-full p-6 flex flex-col justify-between items-center bg-pastel-cardBg rounded-2xl">
+                        <!-- Top Decoration -->
+                        <div class="w-full flex justify-between items-center text-xs text-gray-400 font-bold border-b pb-2 border-pastel-pink/40">
+                            <span class="text-pastel-red"><i class="fas fa-lantern me-1"></i>PHỒN THỂ</span>
+                            <span id="cardCategoryFront" class="bg-pastel-peach px-2 py-0.5 rounded-md text-pastel-ink border border-pastel-ink">Bảng 1</span>
+                        </div>
+
+                        <!-- Main Traditional Kanji -->
+                        <div class="my-auto flex flex-col items-center">
+                            <span id="cardTrad" class="font-chinese text-8xl md:text-9xl font-black text-pastel-ink my-2 tracking-wide">
+                                礙
+                            </span>
+                            <span class="text-xs text-pastel-red font-bold mt-2 animate-bounce-gentle">
+                                (Nhấn để lật xem Giản thể & Pinyin <i class="fas fa-sync-alt ml-1"></i>)
+                            </span>
+                        </div>
+
+                        <!-- Bottom Illustration / Cute Icon -->
+                        <div class="text-2xl">
+                            🌸 🎋 🐼
+                        </div>
+                    </div>
+
+                    <!-- BACK FACE -->
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 w-full h-full p-6 flex flex-col justify-between items-center bg-pastel-mint/30 rounded-2xl border-2 border-pastel-teal">
+                        <!-- Top Header Back -->
+                        <div class="w-full flex justify-between items-center text-xs text-gray-500 font-bold border-b pb-2 border-pastel-teal/40">
+                            <span class="text-emerald-700"><i class="fas fa-check-circle me-1"></i>GIẢN THỂ & PHIÊN ÂM</span>
+                            <span>Mặt Sau</span>
+                        </div>
+
+                        <!-- Content Back -->
+                        <div class="my-auto space-y-3 w-full">
+                            <!-- Pinyin -->
+                            <div>
+                                <span class="text-xs uppercase tracking-wider text-gray-500 font-extrabold block">Pinyin</span>
+                                <span id="cardPinyin" class="text-2xl md:text-3xl font-extrabold text-emerald-700">ài</span>
+                            </div>
+
+                            <!-- Simplified Kanji -->
+                            <div class="bg-white/90 p-3 rounded-2xl border-2 border-pastel-ink shadow-inner">
+                                <span class="text-xs uppercase tracking-wider text-gray-400 font-bold block mb-1">Chữ Giản Thể</span>
+                                <span id="cardSimp" class="font-chinese text-6xl font-black text-pastel-ink">碍</span>
+                            </div>
+
+                            <!-- Meaning -->
+                            <div>
+                                <span class="text-xs uppercase tracking-wider text-gray-500 font-extrabold block">Nghĩa Việt</span>
+                                <span id="cardMeaning" class="text-lg md:text-xl font-extrabold text-pastel-ink">Cản trở, ngại</span>
+                            </div>
+                        </div>
+
+                        <!-- Pronounce Button -->
+                        <button onclick="event.stopPropagation(); speakWord()" class="bg-pastel-yellow hover:bg-amber-300 text-pastel-ink text-xs font-bold px-4 py-1.5 rounded-full border border-pastel-ink flex items-center space-x-1">
+                            <i class="fas fa-volume-high text-amber-700"></i>
+                            <span>Phát âm (Chữ Hán)</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Flashcard Control Buttons -->
+            <div class="flex flex-wrap justify-center items-center gap-3">
+                <button onclick="prevCard()" class="bg-pastel-pink hover:bg-opacity-80 text-pastel-ink font-extrabold px-5 py-2.5 rounded-2xl border-2 border-pastel-ink cute-shadow-btn transition flex items-center space-x-1">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Trước</span>
+                </button>
+
+                <button onclick="shuffleCards()" class="bg-pastel-purple hover:bg-opacity-80 text-pastel-ink font-extrabold px-5 py-2.5 rounded-2xl border-2 border-pastel-ink cute-shadow-btn transition flex items-center space-x-1">
+                    <i class="fas fa-random"></i>
+                    <span>Xáo Trộn</span>
+                </button>
+
+                <button onclick="nextCard()" class="bg-pastel-teal hover:bg-opacity-80 text-pastel-ink font-extrabold px-5 py-2.5 rounded-2xl border-2 border-pastel-ink cute-shadow-btn transition flex items-center space-x-1">
+                    <span>Tiếp</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: PRACTICE / QUIZ MODE -->
+        <section id="practiceSection" class="w-full flex flex-col items-center hidden">
+            
+            <div class="w-full max-w-lg bg-white border-4 border-pastel-ink rounded-3xl p-6 cute-shadow flex flex-col items-center relative">
+                
+                <!-- Mascot & Cloud Header -->
+                <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-pastel-yellow px-6 py-2 rounded-full border-2 border-pastel-ink font-cartoon text-lg font-bold text-pastel-ink shadow-sm flex items-center space-x-2">
+                    <span>🏮 Tự Viết Chữ Giản Thể 🏮</span>
+                </div>
+
+                <!-- Score Dashboard -->
+                <div class="w-full flex justify-between items-center mt-2 mb-4 bg-pastel-cream p-3 rounded-2xl border-2 border-pastel-ink text-sm font-extrabold">
+                    <span class="text-emerald-600"><i class="fas fa-check-circle me-1"></i> Đúng: <span id="scoreCorrect">0</span></span>
+                    <span class="text-rose-500"><i class="fas fa-times-circle me-1"></i> Sai: <span id="scoreWrong">0</span></span>
+                </div>
+
+                <!-- Prompt Question: Traditional Character -->
+                <div class="text-center my-4">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Hãy nhập Chữ Giản Thể cho chữ Phồn thể sau:</p>
+                    <div id="quizTrad" class="font-chinese text-8xl font-black text-pastel-ink bg-pastel-peach/40 border-2 border-dashed border-pastel-red rounded-2xl p-4 my-2 min-w-[160px] inline-block">
+                        礙
+                    </div>
+                    <div class="text-sm font-bold text-gray-500 mt-1">
+                        Pinyin gợi ý: <span id="quizPinyinHint" class="text-pastel-red font-extrabold">ài</span>
+                    </div>
+                </div>
+
+                <!-- User Input Field -->
+                <form onsubmit="handleCheckAnswer(event)" class="w-full flex flex-col items-center space-y-3">
+                    <div class="w-full relative">
+                        <input type="text" id="quizInput" autocomplete="off" placeholder="Gõ chữ Giản thể vào đây..." class="w-full text-center text-3xl font-chinese font-bold py-3 px-4 rounded-2xl border-3 border-pastel-ink bg-pastel-cream focus:bg-white focus:outline-none focus:ring-4 focus:ring-pastel-pink/50 transition">
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-3 w-full">
+                        <button type="submit" id="btnCheck" class="flex-1 bg-pastel-teal hover:bg-opacity-80 text-pastel-ink font-extrabold py-3 rounded-2xl border-2 border-pastel-ink cute-shadow-green text-base transition">
+                            Kiểm tra đáp án
+                        </button>
+                        <button type="button" onclick="skipQuizWord()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold px-4 py-3 rounded-2xl border-2 border-gray-400 text-sm">
+                            Bỏ qua
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Feedback Box -->
+                <div id="quizFeedback" class="w-full mt-4 p-4 rounded-2xl border-2 border-pastel-ink hidden transition-all">
+                    <!-- Dynamic feedback content here -->
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Search / List Modal -->
+    <div id="searchModal" class="fixed inset-0 bg-pastel-ink/60 backdrop-blur-sm z-50 flex justify-center items-center p-4 hidden">
+        <div class="bg-pastel-cream border-4 border-pastel-ink rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col cute-shadow overflow-hidden">
+            <!-- Modal Header -->
+            <div class="p-4 bg-pastel-pink border-b-2 border-pastel-ink flex justify-between items-center">
+                <h3 class="font-cartoon text-xl text-pastel-ink font-bold"><i class="fas fa-book me-2"></i>Danh Sách Từ Hán (Trang 1-5)</h3>
+                <button onclick="toggleSearchModal()" class="w-8 h-8 bg-white border-2 border-pastel-ink rounded-full font-black text-pastel-ink hover:bg-rose-100 flex items-center justify-center">×</button>
+            </div>
+
+            <!-- Modal Search Input -->
+            <div class="p-4 border-b border-gray-200">
+                <input type="text" id="searchInput" oninput="filterWordList()" placeholder="Tìm kiếm theo chữ Phồn, Giản, Pinyin hoặc Nghĩa..." class="w-full px-4 py-2 rounded-xl border-2 border-pastel-ink font-bold text-sm focus:outline-none">
+            </div>
+
+            <!-- Word Grid / Scroll Container -->
+            <div id="wordListGrid" class="p-4 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <!-- Dynamic cards populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs font-bold text-gray-500 border-t-2 border-pastel-pink/30 bg-pastel-cream/50">
+         Giai Điệu Trung Hoa & Hoạt Hình Pastel • Giáo Trình Chuẩn Trang 1-5 Bảng Quy Chiếu
+    </footer>
+
+    <script>
+        // Full Dataset Extracted accurately from Pages 1 to 5 of the reference PDF
+        const VOCAB_DATA = [
+            // Page 1 - Table 1
+            { trad: "礙", simp: "碍", pinyin: "ài", meaning: "Cản trở, ngại", table: 1 },
+            { trad: "骯", simp: "肮", pinyin: "āng", meaning: "Bẩn thỉu", table: 1 },
+            { trad: "襖", simp: "袄", pinyin: "ǎo", meaning: "Áo bông", table: 1 },
+            { trad: "壩", simp: "坝", pinyin: "bà", meaning: "Đập nước", table: 1 },
+            { trad: "闆", simp: "板", pinyin: "bǎn", meaning: "Ông chủ", table: 1 },
+            { trad: "辦", simp: "办", pinyin: "bàn", meaning: "Làm, giải quyết", table: 1 },
+            { trad: "幫", simp: "帮", pinyin: "bāng", meaning: "Giúp đỡ", table: 1 },
+            { trad: "寶", simp: "宝", pinyin: "bǎo", meaning: "Bảo vật", table: 1 },
+            { trad: "報", simp: "报", pinyin: "bào", meaning: "Báo cáo, tin tức", table: 1 },
+            { trad: "幣", simp: "币", pinyin: "bì", meaning: "Tiền tệ", table: 1 },
+            { trad: "斃", simp: "毙", pinyin: "bì", meaning: "Chết, bắn chết", table: 1 },
+            { trad: "標", simp: "标", pinyin: "biāo", meaning: "Tiêu chuẩn, nhãn", table: 1 },
+            { trad: "錶", simp: "表", pinyin: "biǎo", meaning: "Đồng hồ", table: 1 },
+            { trad: "彆", simp: "别", pinyin: "biè", meaning: "Bất hòa, gượng gạo", table: 1 },
+            { trad: "蔔", simp: "卜", pinyin: "bo", meaning: "Củ cải", table: 1 },
+            { trad: "補", simp: "补", pinyin: "bǔ", meaning: "Bù đắp, vá", table: 1 },
+            { trad: "纔", simp: "才", pinyin: "cái", meaning: "Mới, vừa mới", table: 1 },
+            { trad: "蠶", simp: "蚕", pinyin: "cán", meaning: "Con tằm", table: 1 },
+            { trad: "燦", simp: "灿", pinyin: "càn", meaning: "Rực rỡ", table: 1 },
+            { trad: "層", simp: "层", pinyin: "céng", meaning: "Tầng, lớp", table: 1 },
+            { trad: "攙", simp: "搀", pinyin: "chān", meaning: "Đỡ, dìu", table: 1 },
+            { trad: "讒", simp: "谗", pinyin: "chán", meaning: "Nói gièm, sàm tấu", table: 1 },
+            { trad: "饞", simp: "馋", pinyin: "chán", meaning: "Thèm ăn, tham ăn", table: 1 },
+            { trad: "纏", simp: "缠", pinyin: "chán", meaning: "Quấn, quấn quít", table: 1 },
+            { trad: "懺", simp: "忏", pinyin: "chàn", meaning: "Sám hối", table: 1 },
+            { trad: "償", simp: "偿", pinyin: "cháng", meaning: "Bồi thường", table: 1 },
+            { trad: "廠", simp: "厂", pinyin: "chǎng", meaning: "Nhà xưởng", table: 1 },
+            { trad: "徹", simp: "彻", pinyin: "chè", meaning: "Triệt để", table: 1 },
+            { trad: "塵", simp: "尘", pinyin: "chén", meaning: "Bụi bặm", table: 1 },
+            { trad: "襯", simp: "衬", pinyin: "chèn", meaning: "Áo lót, lót", table: 1 },
+            { trad: "稱", simp: "称", pinyin: "chēng", meaning: "Xưng呼, xưng tên", table: 1 },
+            { trad: "懲", simp: "惩", pinyin: "chéng", meaning: "Trừng phạt", table: 1 },
+            { trad: "遲", simp: "迟", pinyin: "chí", meaning: "Chậm chạp, muộn", table: 1 },
+            { trad: "衝", simp: "冲", pinyin: "chōng", meaning: "Xung đột, lao tới", table: 1 },
+            { trad: "醜", simp: "丑", pinyin: "chǒu", meaning: "Xấu xí, hề", table: 1 },
+            { trad: "齣", simp: "出", pinyin: "chū", meaning: "Vở (kịch)", table: 1 },
+            { trad: "礎", simp: "础", pinyin: "chǔ", meaning: "Nền móng", table: 1 },
+            { trad: "處", simp: "处", pinyin: "chù", meaning: "Nơi chốn, xử lý", table: 1 },
+            { trad: "觸", simp: "触", pinyin: "chù", meaning: "Va chạm, tiếp xúc", table: 1 },
+            { trad: "辭", simp: "辞", pinyin: "cí", meaning: "Từ biệt, lời văn", table: 1 },
+            { trad: "聰", simp: "聪", pinyin: "cōng", meaning: "Thông minh", table: 1 },
+            { trad: "叢", simp: "丛", pinyin: "cóng", meaning: "Bụi cây, bụi rậm", table: 1 },
+            { trad: "擔", simp: "担", pinyin: "dān", meaning: "Gánh vác", table: 1 },
+            { trad: "膽", simp: "胆", pinyin: "dǎn", meaning: "Gan, mật", table: 1 },
+            { trad: "導", simp: "导", pinyin: "dǎo", meaning: "Dẫn dắt, hướng dẫn", table: 1 },
+            { trad: "燈", simp: "灯", pinyin: "dēng", meaning: "Đèn", table: 1 },
+            { trad: "鄧", simp: "邓", pinyin: "dèng", meaning: "Họ Đặng", table: 1 },
+            { trad: "敵", simp: "敌", pinyin: "dí", meaning: "Kẻ thù", table: 1 },
+            { trad: "糴", simp: "籴", pinyin: "dí", meaning: "Mua lúa gạo", table: 1 },
+            { trad: "遞", simp: "递", pinyin: "dì", meaning: "Đưa, truyền", table: 1 },
+            { trad: "點", simp: "点", pinyin: "diǎn", meaning: "Giọt, điểm, giờ", table: 1 },
+            { trad: "澱", simp: "淀", pinyin: "diàn", meaning: "Tinh bột, lắng", table: 1 },
+            { trad: "電", simp: "电", pinyin: "diàn", meaning: "Điện", table: 1 },
+            { trad: "冬", simp: "鼕", pinyin: "dōng", meaning: "Tiếng trống (đông đông)", table: 1 },
+            { trad: "鬥", simp: "斗", pinyin: "dòu", meaning: "Đấu tranh, đánh nhau", table: 1 },
+            { trad: "獨", simp: "独", pinyin: "dú", meaning: "Độc thân, cô độc", table: 1 },
+            { trad: "噸", simp: "吨", pinyin: "dūn", meaning: "Tấn (trọng lượng)", table: 1 },
+            { trad: "奪", simp: "夺", pinyin: "duó", meaning: "Cướp lấy, đoạt", table: 1 },
+            { trad: "墮", simp: "堕", pinyin: "duò", meaning: "Rơi rớt, sa đọa", table: 1 },
+
+            // Page 2 - Table 1 Continued
+            { trad: "兒", simp: "儿", pinyin: "ér", meaning: "Trẻ con, con cái", table: 1 },
+            { trad: "礬", simp: "矾", pinyin: "fán", meaning: "Phèn chua", table: 1 },
+            { trad: "範", simp: "范", pinyin: "fàn", meaning: "Khuôn mẫu, phạm vi", table: 1 },
+            { trad: "飛", simp: "飞", pinyin: "fēi", meaning: "Bay", table: 1 },
+            { trad: "墳", simp: "坟", pinyin: "fén", meaning: "Mộ phần", table: 1 },
+            { trad: "奮", simp: "奋", pinyin: "fèn", meaning: "Phấn đấu, vươn lên", table: 1 },
+            { trad: "糞", simp: "粪", pinyin: "fèn", meaning: "Phân bón", table: 1 },
+            { trad: "鳳", simp: "凤", pinyin: "fèng", meaning: "Chim phượng hoàng", table: 1 },
+            { trad: "膚", simp: "肤", pinyin: "fū", meaning: "Da thịt", table: 1 },
+            { trad: "婦", simp: "妇", pinyin: "fù", meaning: "Phụ nữ, vợ", table: 1 },
+            { trad: "復", simp: "复", pinyin: "fù", meaning: "Phục hồi, lặp lại", table: 1 },
+            { trad: "複", simp: "复", pinyin: "fù", meaning: "Phức tạp, kép", table: 1 },
+            { trad: "蓋", simp: "盖", pinyin: "gài", meaning: "Nắp, che đậy", table: 1 },
+            { trad: "乾", simp: "干", pinyin: "gān", meaning: "Khô ráo", table: 1 },
+            { trad: "幹", simp: "干", pinyin: "gàn", meaning: "Cán bộ, làm việc", table: 1 },
+            { trad: "趕", simp: "赶", pinyin: "gǎn", meaning: "Đuổi theo, vội", table: 1 },
+            { trad: "個", simp: "个", pinyin: "gè", meaning: "Cái, con (lượng từ)", table: 1 },
+            { trad: "鞏", simp: "巩", pinyin: "gǒng", meaning: "Củng cố", table: 1 },
+            { trad: "溝", simp: "沟", pinyin: "gōu", meaning: "Mương, rãnh", table: 1 },
+            { trad: "構", simp: "构", pinyin: "gòu", meaning: "Cấu tạo, xây dựng", table: 1 },
+            { trad: "購", simp: "购", pinyin: "gòu", meaning: "Mua sắm", table: 1 },
+            { trad: "穀", simp: "谷", pinyin: "gǔ", meaning: "Ngũ cốc, lúa", table: 1 },
+            { trad: "顧", simp: "顾", pinyin: "gù", meaning: "Chăm sóc, nhìn", table: 1 },
+            { trad: "颳", simp: "刮", pinyin: "guā", meaning: "Gió thổi", table: 1 },
+            { trad: "關", simp: "关", pinyin: "guān", meaning: "Đóng, cửa ải", table: 1 },
+            { trad: "觀", simp: "观", pinyin: "guān", meaning: "Quan sát, xem", table: 1 },
+            { trad: "櫃", simp: "柜", pinyin: "guì", meaning: "Tủ, quầy hàng", table: 1 },
+            { trad: "漢", simp: "汉", pinyin: "hàn", meaning: "Hán tộc, đàn ông", table: 1 },
+            { trad: "號", simp: "号", pinyin: "hào", meaning: "Số, hiệu", table: 1 },
+            { trad: "閤", simp: "合", pinyin: "hé", meaning: "Toàn bộ, hợp lại", table: 1 },
+            { trad: "轟", simp: "轰", pinyin: "hōng", meaning: "Oanh liệt, nổ", table: 1 },
+            { trad: "後", simp: "后", pinyin: "hòu", meaning: "Phía sau", table: 1 },
+            { trad: "鬍", simp: "胡", pinyin: "hú", meaning: "Râu", table: 1 },
+            { trad: "壺", simp: "壶", pinyin: "hú", meaning: "Bình, ấm", table: 1 },
+            { trad: "滬", simp: "沪", pinyin: "hù", meaning: "Thượng Hải", table: 1 },
+            { trad: "護", simp: "护", pinyin: "hù", meaning: "Bảo vệ", table: 1 },
+            { trad: "劃", simp: "划", pinyin: "huà", meaning: "Kế hoạch, phân chia", table: 1 },
+            { trad: "懷", simp: "怀", pinyin: "huái", meaning: "Mang thai, tấm lòng", table: 1 },
+            { trad: "壞", simp: "坏", pinyin: "huài", meaning: "Hư hỏng, xấu", table: 1 },
+            { trad: "歡", simp: "欢", pinyin: "huān", meaning: "Hoan hỉ, vui vẻ", table: 1 },
+            { trad: "環", simp: "环", pinyin: "huán", meaning: "Vòng, môi trường", table: 1 },
+            { trad: "還", simp: "还", pinyin: "hái", meaning: "Trả lại, vẫn còn", table: 1 },
+            { trad: "迴", simp: "回", pinyin: "huí", meaning: "Xoay quanh, trở về", table: 1 },
+            { trad: "夥", simp: "伙", pinyin: "huǒ", meaning: "Bè bạn, hợp tác", table: 1 },
+            { trad: "獲", simp: "获", pinyin: "huò", meaning: "Thu hoạch, đạt được", table: 1 },
+            { trad: "穫", simp: "获", pinyin: "huò", meaning: "Gặt hái", table: 1 },
+            { trad: "擊", simp: "击", pinyin: "jī", meaning: "Đánh, kích", table: 1 },
+            { trad: "鷄", simp: "鸡", pinyin: "jī", meaning: "Con gà", table: 1 },
+            { trad: "積", simp: "积", pinyin: "jī", meaning: "Tích lũy", table: 1 },
+            { trad: "極", simp: "极", pinyin: "jí", meaning: "Cực kỳ, đỉnh", table: 1 },
+            { trad: "際", simp: "际", pinyin: "jì", meaning: "Ranh giới, dịp", table: 1 },
+            { trad: "繼", simp: "继", pinyin: "jì", meaning: "Kế thừa", table: 1 },
+            { trad: "傢", simp: "家", pinyin: "jiā", meaning: "Đồ đạc (gia cụ)", table: 1 },
+            { trad: "價", simp: "价", pinyin: "jià", meaning: "Giá cả", table: 1 },
+            { trad: "艱", simp: "艰", pinyin: "jiān", meaning: "Gian khổ", table: 1 },
+            { trad: "殲", simp: "歼", pinyin: "jiān", meaning: "Tiêu diệt", table: 1 },
+            { trad: "繭", simp: "茧", pinyin: "jiǎn", meaning: "Kén tằm", table: 1 },
+            { trad: "揀", simp: "拣", pinyin: "jiǎn", meaning: "Kén chọn, nhặt", table: 1 },
+            { trad: "鹼", simp: "硷", pinyin: "jiǎn", meaning: "Chất kiềm", table: 1 },
+            { trad: "艦", simp: "舰", pinyin: "jiàn", meaning: "Tàu chiến", table: 1 },
+            { trad: "薑", simp: "姜", pinyin: "jiāng", meaning: "Củ gừng", table: 1 },
+            { trad: "漿", simp: "浆", pinyin: "jiāng", meaning: "Nước hồ, bột hòa", table: 1 },
+            { trad: "槳", simp: "桨", pinyin: "jiǎng", meaning: "Mái chèo", table: 1 },
+            { trad: "獎", simp: "奖", pinyin: "jiǎng", meaning: "Khen thưởng", table: 1 },
+            { trad: "講", simp: "讲", pinyin: "jiǎng", meaning: "Nói, giảng bài", table: 1 },
+            { trad: "醬", simp: "酱", pinyin: "jiàng", meaning: "Nước tương, xốt", table: 1 },
+            { trad: "膠", simp: "胶", pinyin: "jiāo", meaning: "Keo dán", table: 1 },
+            { trad: "階", simp: "阶", pinyin: "jiē", meaning: "Giai cấp, bậc thang", table: 1 },
+            { trad: "潔", simp: "洁", pinyin: "jié", meaning: "Trong sạch, sạch", table: 1 },
+            { trad: "藉", simp: "借", pinyin: "jiè", meaning: "Mượn, cớ", table: 1 },
+            { trad: "僅", simp: "仅", pinyin: "jǐn", meaning: "Chỉ là, duy nhất", table: 1 },
+            { trad: "驚", simp: "惊", pinyin: "jīng", meaning: "Kinh ngạc, sợ", table: 1 },
+
+            // Page 3 - Table 1 Continued
+            { trad: "競", simp: "竞", pinyin: "jìng", meaning: "Cạnh tranh", table: 1 },
+            { trad: "舊", simp: "旧", pinyin: "jiù", meaning: "Cũ kỹ", table: 1 },
+            { trad: "劇", simp: "剧", pinyin: "jù", meaning: "Kịch, dữ dội", table: 1 },
+            { trad: "據", simp: "据", pinyin: "jù", meaning: "Căn cứ", table: 1 },
+            { trad: "懼", simp: "惧", pinyin: "jù", meaning: "Sợ hãi", table: 1 },
+            { trad: "捲", simp: "卷", pinyin: "juǎn", meaning: "Cuốn lại", table: 1 },
+            { trad: "開", simp: "开", pinyin: "kāi", meaning: "Mở, bắt đầu", table: 1 },
+            { trad: "剋", simp: "克", pinyin: "kè", meaning: "Khắc chế", table: 1 },
+            { trad: "墾", simp: "垦", pinyin: "kěn", meaning: "Khai phá", table: 1 },
+            { trad: "懇", simp: "恳", pinyin: "kěn", meaning: "Khẩn thiết", table: 1 },
+            { trad: "誇", simp: "夸", pinyin: "kuā", meaning: "Khoe khoang", table: 1 },
+            { trad: "塊", simp: "块", pinyin: "kuài", meaning: "Cục, miếng", table: 1 },
+            { trad: "虧", simp: "亏", pinyin: "kuī", meaning: "Tổn thất, thiếu", table: 1 },
+            { trad: "睏", simp: "困", pinyin: "kùn", meaning: "Buồn ngủ", table: 1 },
+            { trad: "臘", simp: "腊", pinyin: "là", meaning: "Tháng Chạp, lạp xưởng", table: 1 },
+            { trad: "蠟", simp: "蜡", pinyin: "là", meaning: "Nến, sáp", table: 1 },
+            { trad: "蘭", simp: "兰", pinyin: "lán", meaning: "Hoa lan", table: 1 },
+            { trad: "攔", simp: "拦", pinyin: "lán", meaning: "Cản trở, chặn", table: 1 },
+            { trad: "欄", simp: "栏", pinyin: "lán", meaning: "Lan can, cột", table: 1 },
+            { trad: "爛", simp: "烂", pinyin: "làn", meaning: "Mục nát, thối", table: 1 },
+            { trad: "纍", simp: "累", pinyin: "léi", meaning: "Liên luỵ, mệt", table: 1 },
+            { trad: "壘", simp: "垒", pinyin: "lěi", meaning: "Đồn lũy, đắp", table: 1 },
+            { trad: "類", simp: "类", pinyin: "lèi", meaning: "Loại, thể loại", table: 1 },
+            { trad: "裏", simp: "里", pinyin: "lǐ", meaning: "Bên trong", table: 1 },
+            { trad: "禮", simp: "礼", pinyin: "lǐ", meaning: "Lễ nghĩa, quà", table: 1 },
+            { trad: "隸", simp: "隶", pinyin: "lì", meaning: "Nô lệ, thuộc về", table: 1 },
+            { trad: "簾", simp: "帘", pinyin: "lián", meaning: "Rèm cửa", table: 1 },
+            { trad: "聯", simp: "联", pinyin: "lián", meaning: "Liên kết, câu đối", table: 1 },
+            { trad: "憐", simp: "怜", pinyin: "lián", meaning: "Thương hại", table: 1 },
+            { trad: "煉", simp: "炼", pinyin: "liàn", meaning: "Luyện kim, rèn", table: 1 },
+            { trad: "練", simp: "练", pinyin: "liàn", meaning: "Luyện tập", table: 1 },
+            { trad: "糧", simp: "粮", pinyin: "liáng", meaning: "Lương thực", table: 1 },
+            { trad: "療", simp: "疗", pinyin: "liáo", meaning: "Chữa trị", table: 1 },
+            { trad: "遼", simp: "辽", pinyin: "liáo", meaning: "Xa xôi, Liêu Ninh", table: 1 },
+            { trad: "瞭", simp: "了", pinyin: "liǎo", meaning: "Hiểu rõ", table: 1 },
+            { trad: "獵", simp: "猎", pinyin: "liè", meaning: "Săn bắn", table: 1 },
+            { trad: "臨", simp: "临", pinyin: "lín", meaning: "Đến gần, tới", table: 1 },
+            { trad: "鄰", simp: "邻", pinyin: "lín", meaning: "Hàng xóm", table: 1 },
+            { trad: "嶺", simp: "岭", pinyin: "lǐng", meaning: "Dãy núi", table: 1 },
+            { trad: "廬", simp: "庐", pinyin: "lú", meaning: "Nhà tranh", table: 1 },
+            { trad: "蘆", simp: "芦", pinyin: "lú", meaning: "Cây lau sậy", table: 1 },
+            { trad: "爐", simp: "炉", pinyin: "lú", meaning: "Lò lửa", table: 1 },
+            { trad: "陸", simp: "陆", pinyin: "lù", meaning: "Đất liền", table: 1 },
+            { trad: "驢", simp: "驴", pinyin: "lǘ", meaning: "Con lừa", table: 1 },
+            { trad: "亂", simp: "乱", pinyin: "luàn", meaning: "Lỗn loạn", table: 1 },
+            { trad: "麼", simp: "么", pinyin: "me", meaning: "Trợ từ (cái gì)", table: 1 },
+            { trad: "黴", simp: "霉", pinyin: "méi", meaning: "Nấm mốc", table: 1 },
+            { trad: "矇", simp: "蒙", pinyin: "mēng", meaning: "Lừa dối, mờ mịt", table: 1 },
+            { trad: "濛", simp: "蒙", pinyin: "méng", meaning: "Mưa phùn, mù mịt", table: 1 },
+            { trad: "夢", simp: "梦", pinyin: "mèng", meaning: "Giấc mơ", table: 1 },
+            { trad: "麵", simp: "面", pinyin: "miàn", meaning: "Mì, bột mì", table: 1 },
+            { trad: "廟", simp: "庙", pinyin: "miào", meaning: "Đền miếu", table: 1 },
+            { trad: "滅", simp: "灭", pinyin: "miè", meaning: "Diệt vong, dập tắt", table: 1 },
+            { trad: "蔑", simp: "蔑", pinyin: "miè", meaning: "Kinh miệt", table: 1 },
+            { trad: "畝", simp: "亩", pinyin: "mǔ", meaning: "Mẫu (đơn vị đo)", table: 1 },
+            { trad: "惱", simp: "恼", pinyin: "nǎo", meaning: "Phiền não", table: 1 },
+            { trad: "腦", simp: "脑", pinyin: "nǎo", meaning: "Đầu óc, não", table: 1 },
+            { trad: "擬", simp: "拟", pinyin: "nǐ", meaning: "So sánh, dự thảo", table: 1 },
+            { trad: "釀", simp: "酿", pinyin: "niàng", meaning: "Ủ rượu, làm mật", table: 1 },
+            { trad: "瘧", simp: "疟", pinyin: "nüè", meaning: "Bệnh sốt rét", table: 1 },
+            { trad: "盤", simp: "盘", pinyin: "pán", meaning: "Cái đĩa, mâm", table: 1 },
+            { trad: "闢", simp: "辟", pinyin: "pì", meaning: "Khai phá, bác bỏ", table: 1 },
+            { trad: "蘋", simp: "苹", pinyin: "píng", meaning: "Quả táo (táo tây)", table: 1 },
+            { trad: "憑", simp: "凭", pinyin: "píng", meaning: "Dựa vào, bằng chứng", table: 1 },
+
+            // Page 4 - Table 1 & Table 2 Start
+            { trad: "撲", simp: "扑", pinyin: "pū", meaning: "Vồ lấy, lao vào", table: 1 },
+            { trad: "僕", simp: "仆", pinyin: "pú", meaning: "Người đầy tớ", table: 1 },
+            { trad: "樸", simp: "朴", pinyin: "pǔ", meaning: "Mộc mạc, chất phác", table: 1 },
+            { trad: "啓", simp: "启", pinyin: "qǐ", meaning: "Mở ra, khởi đầu", table: 1 },
+            { trad: "籤", simp: "签", pinyin: "qiān", meaning: "Thẻ xăm, nhãn", table: 1 },
+            { trad: "韆", simp: "千", pinyin: "qiān", meaning: "Xích đu", table: 1 },
+            { trad: "牽", simp: "牵", pinyin: "qiān", meaning: "Dắt, dắt díu", table: 1 },
+            { trad: "纖", simp: "纤", pinyin: "xiān", meaning: "Sợi nhỏ, mảnh", table: 1 },
+            { trad: "竅", simp: "窍", pinyin: "qiào", meaning: "Lỗ, mẹo nhỏ", table: 1 },
+            { trad: "竊", simp: "窃", pinyin: "qiè", meaning: "Trộm cắp, lén lút", table: 1 },
+            { trad: "寢", simp: "寝", pinyin: "qǐn", meaning: "Phòng ngủ, ngủ", table: 1 },
+            { trad: "慶", simp: "庆", pinyin: "qìng", meaning: "Chúc mừng, lễ kỷ niệm", table: 1 },
+            { trad: "瓊", simp: "琼", pinyin: "qióng", meaning: "Ngọc đẹp", table: 1 },
+            { trad: "鞦", simp: "秋", pinyin: "qiū", meaning: "Xích đu", table: 1 },
+            { trad: "麴", simp: "曲", pinyin: "qū", meaning: "Men rượu", table: 1 },
+            { trad: "權", simp: "权", pinyin: "quán", meaning: "Quyền lực", table: 1 },
+            { trad: "勸", simp: "劝", pinyin: "quàn", meaning: "Khuyên bảo", table: 1 },
+            { trad: "確", simp: "确", pinyin: "què", meaning: "Chính xác, chắc chắn", table: 1 },
+            { trad: "讓", simp: "让", pinyin: "ràng", meaning: "Nhường nhịn, cho phép", table: 1 },
+            { trad: "擾", simp: "扰", pinyin: "rǎo", meaning: "Làm phiền, quấy rối", table: 1 },
+            { trad: "熱", simp: "热", pinyin: "rè", meaning: "Nóng, nhiệt độ", table: 1 },
+            { trad: "認", simp: "认", pinyin: "rèn", meaning: "Nhận biết, chấp nhận", table: 1 },
+            { trad: "灑", simp: "酒", pinyin: "sǎ", meaning: "Rắc, vẩy nước", table: 1 },
+            { trad: "傘", simp: "伞", pinyin: "sǎn", meaning: "Cây dù, ô", table: 1 },
+            { trad: "喪", simp: "丧", pinyin: "sāng", meaning: "Mất mát, tang lễ", table: 1 },
+            { trad: "掃", simp: "扫", pinyin: "sǎo", meaning: "Quét nhà", table: 1 },
+            { trad: "澀", simp: "涩", pinyin: "sè", meaning: "Chát, không trơn", table: 1 },
+            { trad: "曬", simp: "晒", pinyin: "shài", meaning: "Phơi nắng", table: 1 },
+            { trad: "傷", simp: "伤", pinyin: "shāng", meaning: "Vết thương, làm đau", table: 1 },
+            { trad: "捨", simp: "舍", pinyin: "shě", meaning: "Vứt bỏ, hy sinh", table: 1 },
+            { trad: "瀋", simp: "沈", pinyin: "shěn", meaning: "Thẩm Dương, nước lèo", table: 1 },
+            { trad: "聲", simp: "声", pinyin: "shēng", meaning: "Âm thanh, tiếng", table: 1 },
+            { trad: "勝", simp: "胜", pinyin: "shèng", meaning: "Thắng lợi", table: 1 },
+            { trad: "濕", simp: "湿", pinyin: "shī", meaning: "Ẩm ướt", table: 1 },
+            { trad: "實", simp: "实", pinyin: "shí", meaning: "Sự thật, thực tế", table: 1 },
+            { trad: "適", simp: "适", pinyin: "shì", meaning: "Thích hợp, vừa vặn", table: 1 },
+            { trad: "勢", simp: "势", pinyin: "shì", meaning: "Thế lực, tư thế", table: 1 },
+            { trad: "獸", simp: "兽", pinyin: "shòu", meaning: "Thú dữ", table: 1 },
+            { trad: "書", simp: "书", pinyin: "shū", meaning: "Sách, viết", table: 1 },
+            { trad: "術", simp: "术", pinyin: "shù", meaning: "Kỹ thuật, thuật", table: 1 },
+            { trad: "樹", simp: "树", pinyin: "shù", meaning: "Cây cối", table: 1 },
+            { trad: "帥", simp: "帅", pinyin: "shuài", meaning: "Đẹp trai, tướng quân", table: 1 },
+            { trad: "鬆", simp: "松", pinyin: "sōng", meaning: "Nới lỏng, xốp", table: 1 },
+            { trad: "蘇", simp: "苏", pinyin: "sū", meaning: "Tỉnh Tô Châu, hồi sinh", table: 1 },
+            { trad: "雖", simp: "虽", pinyin: "suī", meaning: "Mặc dù", table: 1 },
+            { trad: "隨", simp: "随", pinyin: "suí", meaning: "Tùy theo, đi theo", table: 1 },
+            { trad: "臺", simp: "台", pinyin: "tái", meaning: "Đài, đài truyền hình", table: 1 },
+            { trad: "態", simp: "态", pinyin: "tài", meaning: "Thái độ, trạng thái", table: 1 },
+            { trad: "壇", simp: "坛", pinyin: "tán", meaning: "Bàn thờ, diễn đàn", table: 1 },
+            { trad: "嘆", simp: "叹", pinyin: "tàn", meaning: "Thở dài, cảm thán", table: 1 },
+
+            // Table 2 Radical/Simplified Components (Pages 4-5)
+            { trad: "愛", simp: "爱", pinyin: "ài", meaning: "Yêu thương", table: 2 },
+            { trad: "罷", simp: "罢", pinyin: "bà", meaning: "Bãi bỏ, đình công", table: 2 },
+            { trad: "備", simp: "备", pinyin: "bèi", meaning: "Chuẩn bị", table: 2 },
+            { trad: "貝", simp: "贝", pinyin: "bèi", meaning: "Vỏ sò, báu vật", table: 2 },
+            { trad: "筆", simp: "笔", pinyin: "bǐ", meaning: "Cây viết, bút", table: 2 },
+            { trad: "畢", simp: "毕", pinyin: "bì", meaning: "Tốt nghiệp, xong", table: 2 },
+            { trad: "邊", simp: "边", pinyin: "biān", meaning: "Biên giới, bên cạnh", table: 2 },
+            { trad: "賓", simp: "宾", pinyin: "bīn", meaning: "Khách quý", table: 2 },
+            { trad: "參", simp: "参", pinyin: "cān", meaning: "Tham gia, nhân sâm", table: 2 },
+            { trad: "倉", simp: "仓", pinyin: "cāng", meaning: "Nhà kho", table: 2 },
+            { trad: "產", simp: "产", pinyin: "chǎn", meaning: "Sản xuất, sinh sản", table: 2 },
+            { trad: "長", simp: "长", pinyin: "cháng", meaning: "Dài, trưởng thành", table: 2 },
+            { trad: "嘗", simp: "尝", pinyin: "cháng", meaning: "Nếm thử, từng", table: 2 },
+            { trad: "車", simp: "车", pinyin: "chē", meaning: "Xe cộ", table: 2 },
+            { trad: "齒", simp: "齿", pinyin: "chǐ", meaning: "Răng", table: 2 },
+            { trad: "蟲", simp: "虫", pinyin: "chóng", meaning: "Côn trùng, sâu", table: 2 },
+            { trad: "芻", simp: "刍", pinyin: "chú", meaning: "Cỏ khô, chăn nuôi", table: 2 },
+            { trad: "從", simp: "从", pinyin: "cóng", meaning: "Từ đâu, đi theo", table: 2 },
+
+            // Page 5 - Table 2 Continued
+            { trad: "竄", simp: "窜", pinyin: "cuàn", meaning: "Chạy trốn, đổi", table: 2 },
+            { trad: "達", simp: "达", pinyin: "dá", meaning: "Đạt được, thông suốt", table: 2 },
+            { trad: "帶", simp: "带", pinyin: "dài", meaning: "Thắt lưng, mang theo", table: 2 },
+            { trad: "單", simp: "单", pinyin: "dān", meaning: "Đơn độc, danh sách", table: 2 },
+            { trad: "當", simp: "当", pinyin: "dāng", meaning: "Đương nhiên, khi", table: 2 },
+            { trad: "黨", simp: "党", pinyin: "dǎng", meaning: "Đảng phái", table: 2 },
+            { trad: "東", simp: "东", pinyin: "dōng", meaning: "Hướng Đông", table: 2 },
+            { trad: "動", simp: "动", pinyin: "dòng", meaning: "Hành động, di chuyển", table: 2 },
+            { trad: "斷", simp: "断", pinyin: "duàn", meaning: "Cắt đứt, phán đoán", table: 2 },
+            { trad: "對", simp: "对", pinyin: "duì", meaning: "Đúng, đối diện", table: 2 },
+            { trad: "隊", simp: "队", pinyin: "duì", meaning: "Hàng ngũ, đội", table: 2 },
+            { trad: "爾", simp: "尔", pinyin: "ěr", meaning: "Ngươi, bạn", table: 2 },
+            { trad: "發", simp: "发", pinyin: "fā", meaning: "Phát triển, phát ra", table: 2 },
+            { trad: "髮", simp: "发", pinyin: "fà", meaning: "Tóc", table: 2 },
+            { trad: "豐", simp: "丰", pinyin: "fēng", meaning: "Phong phú", table: 2 },
+            { trad: "風", simp: "风", pinyin: "fēng", meaning: "Cơn gió", table: 2 },
+            { trad: "岡", simp: "冈", pinyin: "gāng", meaning: "Gò đất, ngọn đồi", table: 2 },
+            { trad: "廣", simp: "广", pinyin: "guǎng", meaning: "Rộng lớn", table: 2 },
+            { trad: "歸", simp: "归", pinyin: "guī", meaning: "Trở về", table: 2 },
+            { trad: "龜", simp: "龟", pinyin: "guī", meaning: "Con rùa", table: 2 },
+            { trad: "國", simp: "国", pinyin: "guó", meaning: "Quốc gia, đất nước", table: 2 },
+            { trad: "過", simp: "过", pinyin: "guò", meaning: "Đi qua, lỗi lầm", table: 2 },
+            { trad: "華", simp: "华", pinyin: "huá", meaning: "Hoa lệ, Trung Hoa", table: 2 },
+            { trad: "畫", simp: "画", pinyin: "huà", meaning: "Bức tranh, vẽ", table: 2 },
+            { trad: "匯", simp: "汇", pinyin: "huì", meaning: "Hội tụ, chuyển tiền", table: 2 },
+            { trad: "會", simp: "会", pinyin: "huì", meaning: "Cuộc họp, biết làm", table: 2 },
+            { trad: "幾", simp: "几", pinyin: "jǐ", meaning: "Mấy, bao nhiêu", table: 2 },
+            { trad: "夾", simp: "夹", pinyin: "jiā", meaning: "Kẹp lại, ở giữa", table: 2 },
+            { trad: "見", simp: "见", pinyin: "jiàn", meaning: "Gặp mặt, nhìn thấy", table: 2 },
+            { trad: "將", simp: "将", pinyin: "jiāng", meaning: "Sắp sửa, tướng quân", table: 2 },
+            { trad: "節", simp: "节", pinyin: "jié", meaning: "Lễ hội, tiết kiệm", table: 2 },
+            { trad: "盡", simp: "尽", pinyin: "jìn", meaning: "Cố hết sức, cạn", table: 2 },
+            { trad: "進", simp: "进", pinyin: "jìn", meaning: "Tiến lên, đi vào", table: 2 },
+            { trad: "舉", simp: "举", pinyin: "jǔ", meaning: "Giơ lên, hành động", table: 2 },
+            { trad: "來", simp: "来", pinyin: "lái", meaning: "Đến đây", table: 2 },
+            { trad: "樂", simp: "乐", pinyin: "lè", meaning: "Vui vẻ, âm nhạc", table: 2 },
+            { trad: "離", simp: "离", pinyin: "lí", meaning: "Rời xa, ly biệt", table: 2 },
+            { trad: "歷", simp: "历", pinyin: "lì", meaning: "Lịch sử, trải qua", table: 2 },
+            { trad: "麗", simp: "丽", pinyin: "lì", meaning: "Xinh đẹp", table: 2 },
+            { trad: "兩", simp: "两", pinyin: "liǎng", meaning: "Hai (lượng từ)", table: 2 },
+            { trad: "靈", simp: "灵", pinyin: "líng", meaning: "Linh hồn, linh hoạt", table: 2 },
+            { trad: "龍", simp: "龙", pinyin: "lóng", meaning: "Con rồng", table: 2 },
+            { trad: "盧", simp: "卢", pinyin: "lú", meaning: "Họ Lô, cái hũ", table: 2 },
+            { trad: "買", simp: "买", pinyin: "mǎi", meaning: "Mua hàng", table: 2 },
+            { trad: "賣", simp: "卖", pinyin: "mài", meaning: "Bán hàng", table: 2 },
+            { trad: "麥", simp: "麦", pinyin: "mài", meaning: "Lúa mạch", table: 2 },
+            { trad: "門", simp: "门", pinyin: "mén", meaning: "Cánh cửa", table: 2 },
+            { trad: "難", simp: "难", pinyin: "nán", meaning: "Khó khăn", table: 2 },
+            { trad: "鳥", simp: "鸟", pinyin: "niǎo", meaning: "Con chim", table: 2 },
+            { trad: "農", simp: "农", pinyin: "nóng", meaning: "Nông nghiệp", table: 2 },
+            { trad: "氣", simp: "气", pinyin: "qì", meaning: "Không khí, tức giận", table: 2 },
+            { trad: "親", simp: "亲", pinyin: "qīn", meaning: "Thân thiết, cha mẹ", table: 2 },
+            { trad: "窮", simp: "穷", pinyin: "qióng", meaning: "Nghèo khổ", table: 2 },
+            { trad: "區", simp: "区", pinyin: "qū", meaning: "Khu vực", table: 2 },
+            { trad: "時", simp: "时", pinyin: "shí", meaning: "Thời gian", table: 2 },
+            { trad: "壽", simp: "寿", pinyin: "shòu", meaning: "Tuổi thọ", table: 2 },
+            { trad: "萬", simp: "万", pinyin: "wàn", meaning: "Mười nghìn (vạn)", table: 2 },
+            { trad: "為", simp: "为", pinyin: "wèi", meaning: "Bởi vì, làm", table: 2 },
+            { trad: "無", simp: "无", pinyin: "wú", meaning: "Không có", table: 2 },
+            { trad: "寫", simp: "写", pinyin: "xiě", meaning: "Viết chữ", table: 2 },
+            { trad: "陽", simp: "阳", pinyin: "yáng", meaning: "Mặt trời, thái dương", table: 2 },
+            { trad: "養", simp: "养", pinyin: "yǎng", meaning: "Nuôi dưỡng", table: 2 },
+            { trad: "醫", simp: "医", pinyin: "yī", meaning: "Y học, bác sĩ", table: 2 },
+            { trad: "億", simp: "亿", pinyin: "yì", meaning: "Một trăm triệu", table: 2 },
+            { trad: "雲", simp: "云", pinyin: "yún", meaning: "Mây trời", table: 2 },
+            { trad: "圓", simp: "圆", pinyin: "yuán", meaning: "Hình tròn, viên mãn", table: 2 },
+            { trad: "園", simp: "园", pinyin: "yuán", meaning: "Vườn hoa, công viên", table: 2 },
+            { trad: "遠", simp: "远", pinyin: "yuǎn", meaning: "Xa xôi", table: 2 },
+            { trad: "願", simp: "愿", pinyin: "yuàn", meaning: "Nguyện vọng", table: 2 },
+            { trad: "躍", simp: "跃", pinyin: "yuè", meaning: "Nhảy vọt", table: 2 },
+            { trad: "運", simp: "运", pinyin: "yùn", meaning: "Vận chuyển, may mắn", table: 2 },
+            { trad: "雜", simp: "杂", pinyin: "zá", meaning: "Phức tạp, tạp chí", table: 2 },
+            { trad: "臟", simp: "脏", pinyin: "zàng", meaning: "Nội tạng", table: 2 },
+            { trad: "鑿", simp: "凿", pinyin: "záo", meaning: "Cái đục, đục lỗ", table: 2 },
+            { trad: "戰", simp: "战", pinyin: "zhàn", meaning: "Chiến tranh", table: 2 },
+            { trad: "這", simp: "这", pinyin: "zhè", meaning: "Đây, cái này", table: 2 },
+            { trad: "證", simp: "证", pinyin: "zhèng", meaning: "Bằng chứng, chứng nhận", table: 2 },
+            { trad: "鐘", simp: "钟", pinyin: "zhōng", meaning: "Đồng hồ, cái chuông", table: 2 },
+            { trad: "種", simp: "种", pinyin: "zhǒng", meaning: "Chủng loại, trồng cây", table: 2 },
+            { trad: "總", simp: "总", pinyin: "zǒng", meaning: "Tổng cộng", table: 2 },
+            { trad: "鑽", simp: "钻", pinyin: "zuān", meaning: "Kim cương, khoan", table: 2 }
+        ];
+
+        let currentFilter = 'all';
+        let activeVocabList = [...VOCAB_DATA];
+        let currentIndex = 0;
+        let isCardFlipped = false;
+
+        // Practice State
+        let quizCurrentIndex = 0;
+        let scoreCorrect = 0;
+        let scoreWrong = 0;
+
+        // Audio & Synthesizer State
+        let audioCtx = null;
+        let bgmInterval = null;
+        let isBGMPlaying = false;
+        let isSFXOn = true;
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Pentatonic Scale Frequencies for Traditional Chinese Vibe (D, E, F#, A, B)
+        const guzhengNotes = [293.66, 329.63, 369.99, 440.00, 493.88, 587.33, 659.25, 739.99];
+
+        function playGuzhengPluck(freq, duration = 1.5) {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                // Pluck envelope: sharp attack, exponential decay
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function toggleBGM() {
+            initAudioContext();
+            const statusSpan = document.getElementById('bgmStatus');
+            const icon = document.getElementById('bgmIcon');
+
+            if (isBGMPlaying) {
+                clearInterval(bgmInterval);
+                isBGMPlaying = false;
+                statusSpan.textContent = "Bật Nhạc";
+                icon.className = "fas fa-music text-purple-600";
+            } else {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                isBGMPlaying = true;
+                statusSpan.textContent = "Tắt Nhạc";
+                icon.className = "fas fa-pause text-purple-600";
+
+                // Generate relaxing Guzheng arpeggio pattern
+                let noteStep = 0;
+                bgmInterval = setInterval(() => {
+                    if (!isBGMPlaying) return;
+                    const randomNote = guzhengNotes[Math.floor(Math.random() * guzhengNotes.length)];
+                    playGuzhengPluck(randomNote, 2.0);
+                    
+                    // Add secondary harmony pluck occasionally
+                    if (noteStep % 3 === 0) {
+                        setTimeout(() => {
+                            const lowNote = guzhengNotes[Math.floor(Math.random() * 3)];
+                            playGuzhengPluck(lowNote / 2, 2.5);
+                        }, 250);
+                    }
+                    noteStep++;
+                }, 800);
+            }
+        }
+
+        function toggleSFX() {
+            isSFXOn = !isSFXOn;
+            const icon = document.getElementById('sfxIcon');
+            icon.className = isSFXOn ? "fas fa-volume-up text-amber-600" : "fas fa-volume-mute text-gray-400";
+        }
+
+        function playSoundFx(type) {
+            if (!isSFXOn) return;
+            initAudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            try {
+                if (type === 'click') {
+                    playGuzhengPluck(587.33, 0.2);
+                } else if (type === 'flip') {
+                    playGuzhengPluck(440.00, 0.4);
+                } else if (type === 'correct') {
+                    playGuzhengPluck(587.33, 0.3);
+                    setTimeout(() => playGuzhengPluck(739.99, 0.6), 120);
+                } else if (type === 'wrong') {
+                    playGuzhengPluck(200.00, 0.5);
+                }
+            } catch(e){}
+        }
+
+        // Speech Synthesis for Chinese Pronunciation
+        function speakWord() {
+            const word = activeVocabList[currentIndex];
+            if (!word) return;
+            
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word.simp);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function updateCardDisplay() {
+            if (activeVocabList.length === 0) return;
+
+            const word = activeVocabList[currentIndex];
+            
+            // Ensure card is flipped front
+            const cardInner = document.getElementById('cardInner');
+            if (isCardFlipped) {
+                cardInner.classList.remove('rotate-y-180');
+                isCardFlipped = false;
+            }
+
+            // Update DOM
+            setTimeout(() => {
+                document.getElementById('cardTrad').textContent = word.trad;
+                document.getElementById('cardSimp').textContent = word.simp;
+                document.getElementById('cardPinyin').textContent = word.pinyin;
+                document.getElementById('cardMeaning').textContent = word.meaning;
+                document.getElementById('cardCategoryFront').textContent = `Bảng ${word.table}`;
+
+                // Counters
+                document.getElementById('currentIndexDisplay').textContent = currentIndex + 1;
+                document.getElementById('totalWordsDisplay').textContent = activeVocabList.length;
+            }, 150);
+        }
+
+        function flipCard() {
+            playSoundFx('flip');
+            const cardInner = document.getElementById('cardInner');
+            isCardFlipped = !isCardFlipped;
+            cardInner.classList.toggle('rotate-y-180');
+        }
+
+        function nextCard() {
+            playSoundFx('click');
+            if (currentIndex < activeVocabList.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Loop back
+            }
+            updateCardDisplay();
+        }
+
+        function prevCard() {
+            playSoundFx('click');
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = activeVocabList.length - 1;
+            }
+            updateCardDisplay();
+        }
+
+        function shuffleCards() {
+            playSoundFx('click');
+            // Fisher-Yates Shuffle
+            for (let i = activeVocabList.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [activeVocabList[i], activeVocabList[j]] = [activeVocabList[j], activeVocabList[i]];
+            }
+            currentIndex = 0;
+            updateCardDisplay();
+        }
+
+        function onFilterChange() {
+            const val = document.getElementById('tableFilter').value;
+            currentFilter = val;
+
+            if (val === 'all') {
+                activeVocabList = [...VOCAB_DATA];
+            } else if (val === 'table1') {
+                activeVocabList = VOCAB_DATA.filter(w => w.table === 1);
+            } else if (val === 'table2') {
+                activeVocabList = VOCAB_DATA.filter(w => w.table === 2);
+            }
+
+            currentIndex = 0;
+            quizCurrentIndex = 0;
+            updateCardDisplay();
+            setupQuizQuestion();
+            renderModalWordGrid();
+        }
+
+        function setupQuizQuestion() {
+            if (activeVocabList.length === 0) return;
+
+            const word = activeVocabList[quizCurrentIndex];
+            document.getElementById('quizTrad').textContent = word.trad;
+            document.getElementById('quizPinyinHint').textContent = word.pinyin;
+            document.getElementById('quizInput').value = '';
+            
+            // Reset feedback
+            const feedbackBox = document.getElementById('quizFeedback');
+            feedbackBox.classList.add('hidden');
+            feedbackBox.className = "w-full mt-4 p-4 rounded-2xl border-2 border-pastel-ink hidden";
+        }
+
+        function handleCheckAnswer(e) {
+            e.preventDefault();
+            const userInput = document.getElementById('quizInput').value.trim();
+            const word = activeVocabList[quizCurrentIndex];
+            const feedbackBox = document.getElementById('quizFeedback');
+
+            if (!userInput) return;
+
+            feedbackBox.classList.remove('hidden');
+
+            if (userInput === word.simp) {
+                // CORRECT ANSWER
+                playSoundFx('correct');
+                scoreCorrect++;
+                document.getElementById('scoreCorrect').textContent = scoreCorrect;
+
+                feedbackBox.className = "w-full mt-4 p-4 rounded-2xl border-2 border-emerald-600 bg-pastel-mint text-emerald-900 block";
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center space-x-2 font-black text-lg">
+                        <span>🎉 Chính xác rồi! Giỏi quá!</span>
+                    </div>
+                    <p class="text-sm font-bold mt-1">Chữ Phồn: <span class="font-chinese text-xl font-black">${word.trad}</span> = Giản: <span class="font-chinese text-xl font-black">${word.simp}</span> (${word.pinyin}): ${word.meaning}</p>
+                `;
+
+                // Confetti Animation
+                try {
+                    confetti({
+                        particleCount: 50,
+                        spread: 60,
+                        origin: { y: 0.7 }
+                    });
+                } catch(err){}
+
+                // Auto next after 1.8s
+                setTimeout(() => {
+                    nextQuizQuestion();
+                }, 1800);
+
+            } else {
+                // WRONG ANSWER
+                playSoundFx('wrong');
+                scoreWrong++;
+                document.getElementById('scoreWrong').textContent = scoreWrong;
+
+                feedbackBox.className = "w-full mt-4 p-4 rounded-2xl border-2 border-rose-500 bg-rose-50 text-rose-900 block";
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center space-x-2 font-black text-lg">
+                        <span>❌ Chưa chính xác!</span>
+                    </div>
+                    <p class="text-sm font-bold mt-1">Đáp án đúng cho <span class="font-chinese text-xl font-black">${word.trad}</span> là: <span class="font-chinese text-2xl font-black text-rose-600">${word.simp}</span></p>
+                    <p class="text-xs font-semibold mt-0.5">Phiên âm: ${word.pinyin} • Nghĩa: ${word.meaning}</p>
+                `;
+            }
+        }
+
+        function skipQuizWord() {
+            playSoundFx('click');
+            nextQuizQuestion();
+        }
+
+        function nextQuizQuestion() {
+            quizCurrentIndex = (quizCurrentIndex + 1) % activeVocabList.length;
+            setupQuizQuestion();
+        }
+
+        function switchTab(tab) {
+            playSoundFx('click');
+            const flashcardSec = document.getElementById('flashcardSection');
+            const practiceSec = document.getElementById('practiceSection');
+            const tabFC = document.getElementById('tabFlashcard');
+            const tabPrac = document.getElementById('tabPractice');
+
+            if (tab === 'flashcard') {
+                flashcardSec.classList.remove('hidden');
+                practiceSec.classList.add('hidden');
+                
+                tabFC.className = "bg-pastel-pink text-pastel-ink font-extrabold px-6 py-3 rounded-2xl border-2 border-pastel-ink cute-shadow-btn text-base md:text-lg transition flex items-center space-x-2";
+                tabPrac.className = "bg-pastel-cream text-gray-500 font-extrabold px-6 py-3 rounded-2xl border-2 border-pastel-ink cute-shadow-btn text-base md:text-lg transition flex items-center space-x-2";
+            } else {
+                flashcardSec.classList.add('hidden');
+                practiceSec.classList.remove('hidden');
+
+                tabPrac.className = "bg-pastel-teal text-pastel-ink font-extrabold px-6 py-3 rounded-2xl border-2 border-pastel-ink cute-shadow-btn text-base md:text-lg transition flex items-center space-x-2";
+                tabFC.className = "bg-pastel-cream text-gray-500 font-extrabold px-6 py-3 rounded-2xl border-2 border-pastel-ink cute-shadow-btn text-base md:text-lg transition flex items-center space-x-2";
+                
+                setupQuizQuestion();
+            }
+        }
+
+        function toggleSearchModal() {
+            playSoundFx('click');
+            const modal = document.getElementById('searchModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                renderModalWordGrid();
+            }
+        }
+
+        function renderModalWordGrid(filterQuery = '') {
+            const container = document.getElementById('wordListGrid');
+            container.innerHTML = '';
+
+            const filtered = activeVocabList.filter(item => {
+                const q = filterQuery.toLowerCase();
+                return item.trad.includes(q) || item.simp.includes(q) || item.pinyin.toLowerCase().includes(q) || item.meaning.toLowerCase().includes(q);
+            });
+
+            filtered.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-3 rounded-2xl border-2 border-pastel-ink hover:bg-pastel-peach cursor-pointer transition flex flex-col items-center text-center shadow-sm";
+                card.onclick = () => {
+                    currentIndex = activeVocabList.indexOf(item);
+                    updateCardDisplay();
+                    toggleSearchModal();
+                };
+                card.innerHTML = `
+                    <div class="flex items-center space-x-1 font-chinese text-2xl font-black text-pastel-ink">
+                        <span>${item.trad}</span>
+                        <span class="text-gray-300 text-sm">→</span>
+                        <span class="text-emerald-600">${item.simp}</span>
+                    </div>
+                    <div class="text-xs font-extrabold text-pastel-red mt-1">${item.pinyin}</div>
+                    <div class="text-xs font-semibold text-gray-500 truncate w-full mt-0.5">${item.meaning}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterWordList() {
+            const query = document.getElementById('searchInput').value;
+            renderModalWordGrid(query);
+        }
+
+        window.onload = function() {
+            updateCardDisplay();
+            
+            // Allow Keyboard Left / Right navigation
+            document.addEventListener('keydown', (e) => {
+                const practiceSec = document.getElementById('practiceSection');
+                if (practiceSec.classList.contains('hidden')) {
+                    if (e.key === 'ArrowLeft') prevCard();
+                    if (e.key === 'ArrowRight') nextCard();
+                    if (e.key === ' ') flipCard();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
